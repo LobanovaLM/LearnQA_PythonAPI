@@ -1,8 +1,14 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertion import Assertion
+import allure
 
+@allure.epic("Edition cases")
 class TestUserEdit(BaseCase):
+    @allure.title("Test edit just created user")
+    @allure.severity(severity_level="CRITICAL")
+    @allure.description("Test edit just created user with different authorization parameters: authorized, not authorized, "
+                        "authorized different user, email consisted an error, email consisted only one char")
     def test_edit_just_created_user(self):
         # Register
         register_data = self.prepare_registration_data()

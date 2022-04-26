@@ -3,9 +3,12 @@ from lib.assertion import Assertion
 from lib.my_requests import MyRequests
 import allure
 
+@allure.epic("Deletion cases")
 
 class TestUserDelete(BaseCase):
 
+    @allure.title("Test delete user with id 2 (unsuccessful)")
+    @allure.description("This test doesn't delete user with id=2")
     def test_user_delete(self):
 
          # LOGIN
@@ -31,6 +34,9 @@ class TestUserDelete(BaseCase):
              print(f"It's not allowed to Delete ")
         )
 
+    @allure.title("Test delete just create user")
+    @allure.severity(severity_level="CRITICAL")
+    @allure.description("This test successfully delete just create user and tries to delete a user with different data")
     def test_get_deleted_user_data(self):
 
          # REGISTER
@@ -74,17 +80,16 @@ class TestUserDelete(BaseCase):
             print(f"User name = {first_name} is not found")
         )
 
-
         # TEST 3 - deleted_different_user
 
         unauthorised_user_id = int(user_id)-1
         response6 = MyRequests.delete(f"/user/{unauthorised_user_id}",
-                                      headers={"x-csrf-token": token},
-                                      cookies={"auth_sid": auth_sid})
+                                  headers={"x-csrf-token": token},
+                                  cookies={"auth_sid": auth_sid})
         print(response6.status_code,f" for {unauthorised_user_id} ")
         Assertion.assert_code_status(response6, 200)
 
         response7 = MyRequests.get(f"/user/{unauthorised_user_id}",
-                                   headers={"x-csrf-token": token},
-                                   cookies={"auth_sid": auth_sid})
+                               headers={"x-csrf-token": token},
+                               cookies={"auth_sid": auth_sid})
         Assertion.assert_code_status(response7, 404)
